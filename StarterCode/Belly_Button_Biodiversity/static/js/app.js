@@ -1,18 +1,20 @@
 function buildMetadata(sample) {
-
+  console.log("hello")
   // @TODO: Complete the following function that builds the metadata panel
 
   // Use `d3.json` to fetch the metadata for a sample
-    // Use d3 to select the panel with id of `#sample-metadata`
-    d3.json(`/metadata/$sample`).then((data)=>{
-      var pan = d3.select("#sample-metadata");
-      pan.html("");
+  // Use d3 to select the panel with id of `#sample-metadata`
+  d3.json(`/metadata/${sample}`).then((data)=>{
+      
+    var pan = d3.select("#sample-metadata");
+    pan.html("");
 
-      Object.entries(data).forEach(([key, value])=>{
-        pan.append("h6").text(`${key}: ${value}`);
-      });
+    Object.entries(data).forEach(([key, value]) => {
+      pan.append("h6").text(`${key}: ${value}`);
+      console.log(key, value);
+    });
 
-    })
+  });
     // Use `.html("") to clear any existing metadata
 
     // Use `Object.entries` to add each key and value pair to the panel
@@ -21,10 +23,10 @@ function buildMetadata(sample) {
 
     // BONUS: Build the Gauge Chart
     // buildGauge(data.WFREQ);
-}
+};
 
 function buildCharts(sample) {
-
+  console.log("inside build charts")
   // @TODO: Use `d3.json` to fetch the sample data for the plots
 
     // @TODO: Build a Bubble Chart using the sample data
@@ -36,6 +38,24 @@ function buildCharts(sample) {
       var otu_ids = data.otu_ids;
       var otu_labels = data.otu_labels;
       var sample_values = data.sample_values;
+
+      var pie_layout = {
+        margin: {
+          t:0,
+          l:0
+        }
+      };
+
+      var pie_data = [
+        {
+          values:sample_values.slice(0, 10),
+          labels: otu_ids.slice(0, 10),
+          hovertext: otu_labels.slice(0,10),
+          hoverinfo: "hovertext",
+          type: "pie"
+        }
+      ];
+      Plotly.plot("pie", pie_data, pie_layout)
 
       var bubble_layout = {
         margin:{t:0},
@@ -57,24 +77,6 @@ function buildCharts(sample) {
         }
       ];
       Plotly.plot("bubble", bubble_data, bubble_layout);
-
-      var pie_layout = {
-        margin: {
-          t:0,
-          l:0
-        }
-      };
-
-      var pie_data = [
-        {
-          values:sample_values.slice(0, 10),
-          labels: otu_ids.slice(0, 10),
-          hovertext: otu_labels.slice(0,10),
-          hoverinfo: "hovertext",
-          type: "pie"
-        }
-      ];
-      Plotly.plot("pie", pie_data, pie_layout)
 
     });
 }
@@ -100,6 +102,7 @@ function init() {
 }
 
 function optionChanged(newSample) {
+  console.log("inside option changed")
   // Fetch new data each time a new sample is selected
   buildCharts(newSample);
   buildMetadata(newSample);
