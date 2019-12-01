@@ -1,5 +1,5 @@
 function buildMetadata(sample) {
-  console.log("hello")
+  console.log("inside build metadata")
   // @TODO: Complete the following function that builds the metadata panel
 
   // Use `d3.json` to fetch the metadata for a sample
@@ -14,6 +14,7 @@ function buildMetadata(sample) {
       console.log(key, value);
     });
 
+    buildGauge(data.WFREQ);
   });
     // Use `.html("") to clear any existing metadata
 
